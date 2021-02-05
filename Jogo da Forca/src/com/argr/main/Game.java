@@ -30,21 +30,24 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private boolean isRunning = false;
 	private Thread thread;
 	
-	public Player player;
+	private Player player;
 	
 	private int number = 0;
 	private int lastNumber = 0;
 	
 
-	public String[] words;
+	private String[] words;
 	public static String currentWord;
 	public static String completeWord;
 	private char[] emptySpaces;
-	
+	private boolean restartGame = false;
 	
 	public static String gameState = "NOVA PALAVRA";
 	
 	public static Random rand;
+	
+	private int count = 0, maxCount = 30;
+	private boolean draw = false;
 	
 	public Game(){
 		addKeyListener(this);
@@ -93,6 +96,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public void tick() {
 		if(gameState == "NORMAL") {
 			player.tick();
+			if(currentWord.equals(completeWord)) {
+				System.out.println("VOCÊ VENCEU!!!");
+				gameState = "NOVA PALAVRA";
+				player.playerLife = 0;
+			}
 		}else if(gameState == "NOVA PALAVRA") {
 			if(Game.gameState == "NOVA PALAVRA") {
 				while(number == lastNumber) {
@@ -105,7 +113,22 @@ public class Game extends Canvas implements Runnable, KeyListener{
 				completeWord = words[number];
 				currentWord = new String(emptySpaces);
 				System.out.println(currentWord);
-				Game.gameState = "NORMAL";
+				gameState = "NORMAL";
+			}
+		}else if(gameState == "GAME OVER") {
+			count++;
+			if(count == maxCount) {
+				count = 0;
+				if(draw) {
+					draw = false;
+				}else {
+					draw = true;
+				}
+			}
+			if(restartGame) {	
+				gameState = "NOVA PALAVRA";
+				player.playerLife = 0;
+				restartGame = false;
 			}
 		}
 		
@@ -129,7 +152,12 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		}else if(gameState == "GAME OVER") {
 			g.setColor(Color.black);
 			g.setFont(new Font("arial", Font.BOLD, 100));
-			g.drawString("GAME OVER", 200, 350);
+			g.drawString("GAME OVER", 200, 300);
+			g.setFont(new Font("arial", Font.BOLD, 50));
+			if(draw) {
+				g.drawString("Presione ENTER para recomeçar", 110, 400);
+			}
+			
 		}
 		/**/
 		g.dispose();
@@ -144,6 +172,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	    int y = 500;
 	    g.setFont(font);
 	    g.drawString(text, x, y);	
+	}
+	
+	public void checkKey() {
+		
 	}
 
 	@Override
@@ -169,6 +201,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		if(Character.isAlphabetic(player.key)) {
 			player.key = Character.toLowerCase(player.key);
 			player.isPressed = true;
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_ENTER && gameState == "GAME OVER") {
+			restartGame = true;
 		}
 	}
 
