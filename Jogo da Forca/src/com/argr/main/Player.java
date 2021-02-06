@@ -26,6 +26,8 @@ public class Player {
 	
 	public int playerLife = 0;
 	
+	public int posCount = 0;
+	
 	
 	public Player(int x, int y, int WIDTH, int HEIGHT) {
 		this.x = x;
@@ -49,6 +51,16 @@ public class Player {
 		return (int) y;
 	}
 	
+	public boolean isRepeatedKey() {
+		for(int i = 0; i < Game.lastKeys.length; i++) {
+			if(key == Game.lastKeys[i]) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public void tick() {
 		
 		if(isPressed && Game.gameState == "NORMAL") {
@@ -63,8 +75,10 @@ public class Player {
 					count++;
 				}
 			}
-			if(count == 0) {
+			if(count == 0 && !isRepeatedKey()) {
 				playerLife++;
+				Game.lastKeys[posCount] = key;
+				posCount++;
 			}
 			
 		}

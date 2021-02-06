@@ -49,6 +49,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private int count = 0, maxCount = 30;
 	private boolean draw = false;
 	
+	public static char[] lastKeys;
+	
 	public Game(){
 		addKeyListener(this);
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -60,6 +62,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		spritesheet = new Spritesheet("/spritesheet.png");
 		player = new Player(250, 0, 64, 64);
 		words = new String[] {"coxinha", "azul", "famoso"};
+		lastKeys = new char[6];
 	}
 
 	public static void main(String[] args) {
@@ -103,12 +106,12 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			}
 		}else if(gameState == "NOVA PALAVRA") {
 			if(Game.gameState == "NOVA PALAVRA") {
+				Arrays.fill(lastKeys, ' ');
 				while(number == lastNumber) {
 					number = Game.rand.nextInt(words.length);
 				}
 				emptySpaces = new char[words[number].length()];
-				char spaces = '*';
-				Arrays.fill(emptySpaces, spaces);
+				Arrays.fill(emptySpaces, '*');
 				lastNumber = number;
 				completeWord = words[number];
 				currentWord = new String(emptySpaces);
@@ -149,6 +152,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			player.render(g);
 			Rectangle rect = new Rectangle(new Dimension(WIDTH, HEIGHT));
 			renderWord(g, currentWord, rect, new Font("arial", Font.BOLD, 60));
+			g.setFont(new Font("arial", Font.BOLD, 30));
+			g.setColor(Color.black);
+			g.drawString("Letras erradas: ", 10, 30);
+			String lk = new String(lastKeys);
+			g.drawString(lk, 230, 30);
 		}else if(gameState == "GAME OVER") {
 			g.setColor(Color.black);
 			g.setFont(new Font("arial", Font.BOLD, 100));
@@ -180,7 +188,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 
 	@Override
 	public void run() {
-		
+		requestFocus();
 		while(isRunning) {
 			tick();
 			render();
