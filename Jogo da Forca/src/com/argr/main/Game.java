@@ -44,12 +44,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public static String gameState = "NOVA PALAVRA";
 	
-	public static Random rand;
+	private Random rand;
 	
 	private int count = 0, maxCount = 30;
 	private boolean draw = false;
 	
-	public static char[] lastKeys;
 	
 	public Game(){
 		addKeyListener(this);
@@ -62,7 +61,6 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		spritesheet = new Spritesheet("/spritesheet.png");
 		player = new Player(250, 0, 64, 64);
 		words = new String[] {"coxinha", "azul", "famoso"};
-		lastKeys = new char[6];
 	}
 
 	public static void main(String[] args) {
@@ -100,24 +98,30 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		if(gameState == "NORMAL") {
 			player.tick();
 			if(currentWord.equals(completeWord)) {
-				System.out.println("VOCÊ VENCEU!!!");
+				//Modificar essa parte
 				gameState = "NOVA PALAVRA";
 				player.playerLife = 0;
 			}
 		}else if(gameState == "NOVA PALAVRA") {
-			if(Game.gameState == "NOVA PALAVRA") {
-				Arrays.fill(lastKeys, ' ');
-				while(number == lastNumber) {
-					number = Game.rand.nextInt(words.length);
-				}
-				emptySpaces = new char[words[number].length()];
-				Arrays.fill(emptySpaces, '*');
-				lastNumber = number;
-				completeWord = words[number];
-				currentWord = new String(emptySpaces);
-				System.out.println(currentWord);
-				gameState = "NORMAL";
+			//Resetando o player
+			Arrays.fill(player.lastKeys, ' ');
+			player.posCount = 0;
+			player.playerLife = 0;
+			
+			//Selecionando a palavra
+			while(number == lastNumber) {
+				number = rand.nextInt(words.length);
 			}
+			lastNumber = number;
+			
+			//Criando a palavra atual com os espaços sem letras
+			emptySpaces = new char[words[number].length()];
+			Arrays.fill(emptySpaces, '*');
+			currentWord = new String(emptySpaces);
+			
+			//Salvando a palavra completa e iniciando o jogo
+			completeWord = words[number];
+			gameState = "NORMAL";
 		}else if(gameState == "GAME OVER") {
 			count++;
 			if(count == maxCount) {
@@ -130,7 +134,6 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			}
 			if(restartGame) {	
 				gameState = "NOVA PALAVRA";
-				player.playerLife = 0;
 				restartGame = false;
 			}
 		}
@@ -147,15 +150,20 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		Graphics g = image.getGraphics();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		/**/
+		/* Renderizando o jogo */
+		
 		if(gameState == "NORMAL") {
 			player.render(g);
+			
+			//Renderizando a palavra centralizada no eixo x
 			Rectangle rect = new Rectangle(new Dimension(WIDTH, HEIGHT));
 			renderWord(g, currentWord, rect, new Font("arial", Font.BOLD, 60));
+			
+			//Escrevendo as letras que o player errou na tela
 			g.setFont(new Font("arial", Font.BOLD, 30));
 			g.setColor(Color.black);
 			g.drawString("Letras erradas: ", 10, 30);
-			String lk = new String(lastKeys);
+			String lk = new String(player.lastKeys);
 			g.drawString(lk, 230, 30);
 		}else if(gameState == "GAME OVER") {
 			g.setColor(Color.black);
@@ -167,13 +175,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			}
 			
 		}
-		/**/
+		/****/
 		g.dispose();
 		g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
 		bs.show();
 	}
 	
+	//Método para renderizar a palavra centralizada no eixo x
 	public void renderWord(Graphics g, String text, Rectangle rect, Font font) {
 	    FontMetrics metrics = g.getFontMetrics(font);
 	    int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
@@ -181,12 +190,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	    g.setFont(font);
 	    g.drawString(text, x, y);	
 	}
-	
-	public void checkKey() {
-		
-	}
 
-	@Override
 	public void run() {
 		requestFocus();
 		while(isRunning) {
@@ -218,7 +222,6 @@ public class Game extends Canvas implements Runnable, KeyListener{
 
 	public void keyReleased(KeyEvent e) {
 		player.key = ' ';
-		player.isPressed = false;
 	}
 
 	public void keyTyped(KeyEvent e) {

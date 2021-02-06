@@ -15,17 +15,15 @@ public class Player {
 	private double x, y;
 	private int WIDTH, HEIGHT;
 	
-	public BufferedImage[] sprites;
+	private BufferedImage[] sprites;
 	
-	public boolean fail = false;
-	
-	
-	
+	private boolean fail = false;
+
+	public char[] lastKeys;
 	public char key = ' ';
 	public boolean isPressed = false;
 	
 	public int playerLife = 0;
-	
 	public int posCount = 0;
 	
 	
@@ -41,6 +39,8 @@ public class Player {
 			sprites[i] = Game.spritesheet.getSprite(0 + (64*i), 0, 64, 64);
 		}
 		
+		lastKeys = new char[6];
+		
 	}
 	
 	public int getX() {
@@ -51,9 +51,10 @@ public class Player {
 		return (int) y;
 	}
 	
+	//Método para ver se a tecla que o jogador clicou é repetida ou não
 	public boolean isRepeatedKey() {
-		for(int i = 0; i < Game.lastKeys.length; i++) {
-			if(key == Game.lastKeys[i]) {
+		for(int i = 0; i < lastKeys.length; i++) {
+			if(key == lastKeys[i]) {
 				return true;
 			}
 		}
@@ -63,21 +64,23 @@ public class Player {
 	
 	public void tick() {
 		
-		if(isPressed && Game.gameState == "NORMAL") {
+		if(isPressed) {
 			isPressed = false;
 			int count = 0;
 			for(int i = 0; i < Game.completeWord.length(); i++) {
 				if(key == Game.completeWord.charAt(i)) {
-					System.out.println("Você acertou!!!");
+					//Adicionando a tecla certa na palavra atual
 					char[] newCurrent = Game.currentWord.toCharArray();
 					newCurrent[i] = Game.completeWord.charAt(i);
 					Game.currentWord = new String(newCurrent);
 					count++;
 				}
 			}
+			
+			//Verificando se a tecla estava errada
 			if(count == 0 && !isRepeatedKey()) {
 				playerLife++;
-				Game.lastKeys[posCount] = key;
+				lastKeys[posCount] = key;
 				posCount++;
 			}
 			
@@ -91,9 +94,5 @@ public class Player {
 	public void render(Graphics g) {
 		g.drawImage(sprites[playerLife], getX(), getY(), WIDTH*8, HEIGHT*8, null);
 		g.setColor(Color.black);
-		/*
-		g.fillRect(50, 300, 60, 10);
-		g.setFont(new Font("arial", Font.BOLD, 75));
-		g.drawString("K", 50+4, 295);*/
 	}
 }
