@@ -40,13 +40,15 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public static String currentWord;
 	public static String completeWord;
 	private char[] emptySpaces;
+	
 	private boolean restartGame = false;
+	private boolean quitGame = false;
 	
 	public static String gameState = "NOVA PALAVRA";
 	
 	private Random rand;
 	
-	private int count = 0, maxCount = 30;
+	private int count = 0, maxCount = 35;
 	private boolean draw = false;
 	
 	
@@ -98,9 +100,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		if(gameState == "NORMAL") {
 			player.tick();
 			if(currentWord.equals(completeWord)) {
-				//Modificar essa parte
-				gameState = "NOVA PALAVRA";
-				player.playerLife = 0;
+				gameState = "VITORIA";
 			}
 		}else if(gameState == "NOVA PALAVRA") {
 			//Resetando o player
@@ -122,7 +122,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			//Salvando a palavra completa e iniciando o jogo
 			completeWord = words[number];
 			gameState = "NORMAL";
-		}else if(gameState == "GAME OVER") {
+		}else if(gameState == "GAME OVER" || gameState == "VITORIA") {
 			count++;
 			if(count == maxCount) {
 				count = 0;
@@ -135,6 +135,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			if(restartGame) {	
 				gameState = "NOVA PALAVRA";
 				restartGame = false;
+			}else if(quitGame) {
+				System.exit(1);
 			}
 		}
 		
@@ -168,12 +170,20 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		}else if(gameState == "GAME OVER") {
 			g.setColor(Color.black);
 			g.setFont(new Font("arial", Font.BOLD, 100));
-			g.drawString("GAME OVER", 200, 300);
-			g.setFont(new Font("arial", Font.BOLD, 50));
+			g.drawString("GAME OVER", 180, 300);
+			g.setFont(new Font("arial", Font.BOLD, 35));
 			if(draw) {
-				g.drawString("Presione ENTER para recomeçar", 110, 400);
+				g.drawString("Presione ENTER para recomeçar ou ESC para sair", 80, 400);
 			}
 			
+		}else if(gameState == "VITORIA") {
+			g.setColor(Color.black);
+			g.setFont(new Font("arial", Font.BOLD, 90));
+			g.drawString("VOCÊ ACERTOU!", 125, 280);
+			g.setFont(new Font("arial", Font.BOLD, 35));
+			if(draw) {
+				g.drawString("Precione ENTER para gerar outra palavra ou ESC para sair", 15, 400);
+			}
 		}
 		/****/
 		g.dispose();
@@ -215,13 +225,17 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			player.isPressed = true;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_ENTER && gameState == "GAME OVER") {
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 			restartGame = true;
+		}else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			quitGame = true;
 		}
 	}
 
 	public void keyReleased(KeyEvent e) {
 		player.key = ' ';
+		restartGame = false;
+		quitGame = false;
 	}
 
 	public void keyTyped(KeyEvent e) {
