@@ -37,6 +37,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 
 	private String[] words;
+	private Words word;
 	public static String currentWord;
 	public static String completeWord;
 	private char[] emptySpaces;
@@ -46,10 +47,16 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public static String gameState = "NOVA PALAVRA";
 	
-	private Random rand;
+	public static Random rand;
 	
 	private int count = 0, maxCount = 35;
 	private boolean draw = false;
+	
+	private String[] lastWords = new String[10];
+	private int maxWords = 10;
+	private int wordCount = 0;
+	
+	private String path;
 	
 	
 	public Game(){
@@ -63,6 +70,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		spritesheet = new Spritesheet("/spritesheet.png");
 		player = new Player(250, 0, 64, 64);
 		words = new String[] {"coxinha", "azul", "famoso"};
+		word = new Words();
+		path = "C:\\Users\\LAG20\\eclipse-workspace\\Jogo da Forca\\res\\cor.txt";
 	}
 
 	public static void main(String[] args) {
@@ -97,6 +106,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	}
 	
 	public void tick() {
+		word.tick();
+		
 		if(gameState == "NORMAL") {
 			player.tick();
 			if(currentWord.equals(completeWord)) {
@@ -109,18 +120,13 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			player.playerLife = 0;
 			
 			//Selecionando a palavra
-			while(number == lastNumber) {
-				number = rand.nextInt(words.length);
-			}
-			lastNumber = number;
+			completeWord = word.getWord(path);
 			
 			//Criando a palavra atual com os espaços sem letras
-			emptySpaces = new char[words[number].length()];
+			emptySpaces = new char[completeWord.length()];	
 			Arrays.fill(emptySpaces, '*');
 			currentWord = new String(emptySpaces);
-			
-			//Salvando a palavra completa e iniciando o jogo
-			completeWord = words[number];
+			//Iniciando o jogo
 			gameState = "NORMAL";
 		}else if(gameState == "GAME OVER" || gameState == "VITORIA") {
 			count++;

@@ -1,0 +1,11 @@
+CORES
+vermelho
+azul
+verde
+rosa
+laranja
+amarelo
+roxo
+cinza
+preto
+branco
