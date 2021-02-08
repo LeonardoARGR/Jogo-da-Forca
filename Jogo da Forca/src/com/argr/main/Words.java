@@ -15,9 +15,10 @@ public class Words {
 	private int wordCount = 0;
 	private int maxWords = 10;
 	private int maxCount = 0;
-	
+	private List<Integer> numbers;
 	public Words() {
 		lastWords = new ArrayList<String>();
+		numbers = new ArrayList<>();
 	}
 	
 	public String getWord(String path) {
@@ -29,16 +30,14 @@ public class Words {
 				BufferedReader reader = new BufferedReader(new FileReader(file));
 				String line = null;
 				try {
-					maxCount++;
-					if(maxCount > maxWords) {
-						maxCount = 1;
-					}
+					maxCount = newNumber();
+					System.out.println(numbers);
 					while((line = reader.readLine()) != null) {
 						count++;
-						if(count == maxCount) {
+						if(count >= maxCount) {
 							word = line;
 							lastWords.add(word);
-							//System.out.println(lastWords);
+							System.out.println(lastWords);
 							return word;
 						}
 						
@@ -47,10 +46,26 @@ public class Words {
 				
 			}catch(FileNotFoundException e) {}
 			
-		}else {
-			System.out.println("não existe");
 		}
 		return null;
+	}
+	
+	public int newNumber() {
+		int n = 0;
+		if(numbers.isEmpty()) {
+			n = Game.rand.nextInt(11);
+			if(n <= 0) {
+				n = 1;
+			}
+			numbers.add(n);
+			return n;
+		}else {
+			while(numbers.contains(n) || n == 0) {
+				n = Game.rand.nextInt(11);
+			}
+			numbers.add(n);
+			return n;
+		}
 	}
 	
 	public void tick() {
