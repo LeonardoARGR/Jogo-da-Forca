@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,6 +25,17 @@ public class Words {
 	public String getWord(String path) {
 		String word = "";
 		File file = new File(path);
+		LineNumberReader lnr;
+		try {
+			lnr = new LineNumberReader(new FileReader(file));
+			lnr.skip(Long.MAX_VALUE);
+			maxWords = lnr.getLineNumber()+1;
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(maxWords);
 		int count = 0;
 		if(file.exists()) {
 			try {
@@ -37,7 +49,8 @@ public class Words {
 						if(count >= maxCount) {
 							word = line;
 							lastWords.add(word);
-							System.out.println(lastWords);
+							System.out.println(lastWords.size());
+							System.out.println(word);
 							return word;
 						}
 						
