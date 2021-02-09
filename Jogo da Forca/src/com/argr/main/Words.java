@@ -12,13 +12,11 @@ import java.util.Arrays;
 
 public class Words {
 	
-	private List<String> lastWords;
-	private int maxWords = 20;
+	public int maxWords = 0;
 	private int maxCount = 0;
 	public List<Integer> numbers;
 	
 	public Words() {
-		lastWords = new ArrayList<String>();
 		numbers = new ArrayList<>();
 	}
 	
@@ -35,7 +33,7 @@ public class Words {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(maxWords);
+		//System.out.println(maxWords);
 		int count = 0;
 		if(file.exists()) {
 			try {
@@ -43,14 +41,13 @@ public class Words {
 				String line = null;
 				try {
 					maxCount = newNumber();
-					System.out.println(numbers);
+					//System.out.println(numbers);
 					while((line = reader.readLine()) != null) {
 						count++;
 						if(count >= maxCount) {
 							word = line;
-							lastWords.add(word);
-							System.out.println(lastWords.size());
-							System.out.println(word);
+							//System.out.println(numbers.size());
+							//System.out.println(word);
 							return word;
 						}
 						

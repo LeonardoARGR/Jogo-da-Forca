@@ -46,7 +46,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public static Random rand;
 	
 	private int count = 0, maxCount = 35;
-	private boolean draw = false;
+	private boolean draw = true;
 	
 	private String path;
 
@@ -120,7 +120,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			
 			//Selecionando a palavra e o tema
 			path = "C:\\Users\\LAG20\\eclipse-workspace\\Jogo da Forca\\res\\" + themes[currentTheme] + ".txt";
-			System.out.println(themes[currentTheme]);
+			//System.out.println(themes[currentTheme]);
 			completeWord = word.getWord(path);
 			
 			//Criando a palavra atual com os espaços sem letras
@@ -142,9 +142,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 				}
 			}
 			if(restartGame) {	
-				gameState = "NOVA PALAVRA";
-				if(gameState == "GAME OVER") {
+				if(word.numbers.size() == word.maxWords) {
+					gameState = "MENU";
 					word.numbers.clear();
+				}else {
+					gameState = "NOVA PALAVRA";
+					if(gameState == "GAME OVER") {
+						word.numbers.clear();
+					}
 				}
 				restartGame = false;
 			}else if(quitGame) {
@@ -193,7 +198,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			
 		}else if(gameState == "VITORIA") {
 			Graphics2D g2 = (Graphics2D) g;
-			g2.setColor(new Color(255, 255, 255, 200));
+			g2.setColor(new Color(255, 255, 255, 0));
 			g2.fillRect(0, 0, WIDTH, HEIGHT);
 			g.setColor(Color.black);
 			g.setFont(new Font("arial", Font.BOLD, 90));
@@ -252,9 +257,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		}
 		
 		if(gameState == "MENU") {
-			if(e.getKeyCode() == KeyEvent.VK_UP) {
+			if(e.getKeyCode() == KeyEvent.VK_UP ||
+					e.getKeyCode() == KeyEvent.VK_W) {
 				menu.up = true;
-			}else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+			}else if(e.getKeyCode() == KeyEvent.VK_DOWN ||
+					e.getKeyCode() == KeyEvent.VK_S) {
 				menu.down = true;
 			}
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
