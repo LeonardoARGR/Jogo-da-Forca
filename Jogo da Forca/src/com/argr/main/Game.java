@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -31,12 +32,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private Thread thread;
 	
 	private Player player;
-	
-	private int number = 0;
-	private int lastNumber = 0;
-	
 
-	private String[] words;
 	private Words word;
 	public static String currentWord;
 	public static String completeWord;
@@ -45,18 +41,20 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private boolean restartGame = false;
 	private boolean quitGame = false;
 	
-	public static String gameState = "NOVA PALAVRA";
+	public static String gameState = "MENU";
 	
 	public static Random rand;
 	
 	private int count = 0, maxCount = 35;
 	private boolean draw = false;
 	
-	private String[] lastWords = new String[10];
-	private int maxWords = 10;
-	private int wordCount = 0;
-	
 	private String path;
+
+	public String[] themes = {"cor", "alimento", "nome"};
+	
+	private Menu menu;
+	
+	public static int currentTheme;
 	
 	
 	public Game(){
@@ -67,11 +65,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		//Inicializando objetos
 		rand = new Random();
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		menu = new Menu();
 		spritesheet = new Spritesheet("/spritesheet.png");
 		player = new Player(250, 0, 64, 64);
-		words = new String[] {"coxinha", "azul", "famoso"};
 		word = new Words();
-		path = "C:\\Users\\LAG20\\eclipse-workspace\\Jogo da Forca\\res\\cor.txt";
 	}
 
 	public static void main(String[] args) {
@@ -113,13 +110,17 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			if(currentWord.equals(completeWord)) {
 				gameState = "VITORIA";
 			}
-		}else if(gameState == "NOVA PALAVRA") {
+		}
+		
+		else if(gameState == "NOVA PALAVRA") {
 			//Resetando o player
 			Arrays.fill(player.lastKeys, ' ');
 			player.posCount = 0;
 			player.playerLife = 0;
 			
-			//Selecionando a palavra
+			//Selecionando a palavra e o tema
+			path = "C:\\Users\\LAG20\\eclipse-workspace\\Jogo da Forca\\res\\" + themes[currentTheme] + ".txt";
+			System.out.println(themes[currentTheme]);
 			completeWord = word.getWord(path);
 			
 			//Criando a palavra atual com os espaços sem letras
@@ -128,7 +129,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			currentWord = new String(emptySpaces);
 			//Iniciando o jogo
 			gameState = "NORMAL";
-		}else if(gameState == "GAME OVER" || gameState == "VITORIA") {
+		}
+		
+		else if(gameState == "GAME OVER" || gameState == "VITORIA") {
 			count++;
 			if(count == maxCount) {
 				count = 0;
@@ -140,12 +143,18 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			}
 			if(restartGame) {	
 				gameState = "NOVA PALAVRA";
+				if(gameState == "GAME OVER") {
+					word.numbers.clear();
+				}
 				restartGame = false;
 			}else if(quitGame) {
 				System.exit(1);
 			}
 		}
 		
+		else if(gameState == "MENU") {
+			menu.tick();
+		}
 		
 	}
 	
@@ -183,6 +192,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			}
 			
 		}else if(gameState == "VITORIA") {
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(new Color(255, 255, 255, 200));
+			g2.fillRect(0, 0, WIDTH, HEIGHT);
 			g.setColor(Color.black);
 			g.setFont(new Font("arial", Font.BOLD, 90));
 			g.drawString("VOCÊ ACERTOU!", 125, 280);
@@ -190,6 +202,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			if(draw) {
 				g.drawString("Precione ENTER para gerar outra palavra ou ESC para sair", 15, 400);
 			}
+		}else if(gameState == "MENU") {
+			menu.render(g);
 		}
 		/****/
 		g.dispose();
@@ -236,10 +250,22 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		}else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			quitGame = true;
 		}
+		
+		if(gameState == "MENU") {
+			if(e.getKeyCode() == KeyEvent.VK_UP) {
+				menu.up = true;
+			}else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				menu.down = true;
+			}
+			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				menu.enter = true;
+			}
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
 		player.key = ' ';
+		player.isPressed = false;
 		restartGame = false;
 		quitGame = false;
 	}

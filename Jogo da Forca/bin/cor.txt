@@ -8,3 +8,13 @@ roxo
 cinza
 preto
 branco
+marrom
+magenta
+violeta
+lilas
+ciano
+prata
+dourado
+bege
+bronze
+purpura

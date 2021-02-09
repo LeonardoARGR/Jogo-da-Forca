@@ -12,10 +12,10 @@ import java.util.Arrays;
 public class Words {
 	
 	private List<String> lastWords;
-	private int wordCount = 0;
-	private int maxWords = 10;
+	private int maxWords = 20;
 	private int maxCount = 0;
-	private List<Integer> numbers;
+	public List<Integer> numbers;
+	
 	public Words() {
 		lastWords = new ArrayList<String>();
 		numbers = new ArrayList<>();
@@ -53,7 +53,7 @@ public class Words {
 	public int newNumber() {
 		int n = 0;
 		if(numbers.isEmpty()) {
-			n = Game.rand.nextInt(11);
+			n = Game.rand.nextInt(maxWords+1);
 			if(n <= 0) {
 				n = 1;
 			}
@@ -61,7 +61,7 @@ public class Words {
 			return n;
 		}else {
 			while(numbers.contains(n) || n == 0) {
-				n = Game.rand.nextInt(11);
+				n = Game.rand.nextInt(maxWords+1);
 			}
 			numbers.add(n);
 			return n;
