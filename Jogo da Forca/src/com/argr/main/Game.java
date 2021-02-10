@@ -101,7 +101,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		if(gameState == "NORMAL") {
 			player.tick();
 			if(currentWord.equals(completeWord)) {
-				gameState = "VITORIA";
+				if(word.numbers.size() >= word.maxWords) {
+					gameState = "FIM";
+				}else {
+					gameState = "VITORIA";
+				}
 			}
 		}
 		
@@ -124,7 +128,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			gameState = "NORMAL";
 		}
 		
-		else if(gameState == "GAME OVER" || gameState == "VITORIA") {
+		else if(gameState == "GAME OVER" || gameState == "VITORIA" || gameState == "FIM") {
 			menu.tick();
 		}
 		
@@ -159,7 +163,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			g.drawString("Letras erradas: ", 10, 30);
 			String lk = new String(player.lastKeys);
 			g.drawString(lk, 230, 30);
-		if(gameState == "GAME OVER" || gameState == "VITORIA" || gameState == "MENU") {
+		if(gameState == "GAME OVER" || gameState == "VITORIA" || gameState == "FIM" || gameState == "MENU") {
 			menu.render(g);
 		}
 		/****/
@@ -201,8 +205,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			player.key = Character.toLowerCase(player.key);
 			player.isPressed = true;
 		}
-		
-		if(gameState == "MENU" || gameState == "VITORIA" || gameState == "GAME OVER") {
+		if(gameState == "VITORIA" || gameState == "GAME OVER" || gameState == "MENU" || gameState == "FIM") {
 			if(e.getKeyCode() == KeyEvent.VK_UP ||
 					e.getKeyCode() == KeyEvent.VK_W) {
 				menu.up = true;

@@ -39,13 +39,7 @@ public class Menu {
 				Game.gameState = "NOVA PALAVRA";	
 				currentOption = 0;
 			}
-		}else if(Game.gameState == "VITORIA" || Game.gameState == "GAME OVER") {
-			if(Game.gameState == "VITORIA") {
-				options[0] = "Continuar";
-			}else {
-				options[0] = "Reiniciar";
-			}
-			
+		}else if(Game.gameState == "VITORIA" || Game.gameState == "GAME OVER" || Game.gameState == "FIM") {
 			if(up) {
 				up = false;
 				currentOption--;
@@ -99,16 +93,24 @@ public class Menu {
 				g.drawString(menuOptions[i], 560, 100 + (i*90));
 				g.drawString(">", 520, 100 + (currentOption*90));
 			}
-		}else if(Game.gameState == "VITORIA" || Game.gameState == "GAME OVER") {
+		}else if(Game.gameState == "VITORIA" || Game.gameState == "GAME OVER" || Game.gameState == "FIM") {
 			Graphics2D g2 = (Graphics2D) g;
 			Font font = new Font("arial", Font.BOLD, 90);
 			FontMetrics fm = g.getFontMetrics(font);
-			String txt = "";
+			String[] txt = {"Fim de jogo", "Você acertou!", "Você acertou todas as palavras!"};
+			int txti;
 			
 			if(Game.gameState == "GAME OVER") {
-				txt = "Fim de jogo";
+				txti = 0;
+				options[0] = "Reiniciar";
+			}else if(Game.gameState == "VITORIA"){
+				txti = 1;
+				options[0] = "Continuar";
 			}else {
-				txt = "Você acertou!";
+				font = new Font("arial", Font.BOLD, 60);
+				fm = g.getFontMetrics(font);
+			    txti = 2;
+			    options[0] = "Reiniciar";
 			}
 			
 			g2.setColor(new Color(255, 255, 255, 240));
@@ -116,7 +118,7 @@ public class Menu {
 			
 			g.setColor(Color.black);
 			g.setFont(font);
-			g.drawString(txt, Game.WIDTH/2 - (fm.stringWidth(txt)/2), 200);
+			g.drawString(txt[txti], Game.WIDTH/2 - (fm.stringWidth(txt[txti])/2), 200);
 			
 			for(int i = 0; i < options.length; i++) {
 				font = new Font("arial", Font.BOLD, 50);

@@ -45,8 +45,8 @@ public class Words {
 						count++;
 						if(count >= maxCount) {
 							word = line;
-							//System.out.println(numbers.size());
-							//System.out.println(word);
+							System.out.println(numbers.size());
+							System.out.println(word);
 							return word;
 						}
 						
