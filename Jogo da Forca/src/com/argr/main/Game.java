@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
@@ -128,13 +127,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			gameState = "NORMAL";
 		}
 		
-		else if(gameState == "GAME OVER" || gameState == "VITORIA" || gameState == "FIM") {
+		else {
 			menu.tick();
-		}
-		
-		else if(gameState == "MENU") {
-			menu.tick();
-			word.numbers.clear();
 		}
 		
 	}
@@ -148,22 +142,25 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		Graphics g = image.getGraphics();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		/* Renderizando o jogo */
 		
+		/* Renderizando o jogo */
 		player.render(g);
 			
 		//Renderizando a palavra centralizada no eixo x
-		if(gameState == "NORMAL" || gameState == "VITORIA" || gameState == "GAME OVER") {
-			Rectangle rect = new Rectangle(new Dimension(WIDTH, HEIGHT));
-			renderWord(g, currentWord, rect, new Font("arial", Font.BOLD, 60));
+		if(gameState == "NORMAL") {
+			Font font = new Font("arial", Font.BOLD, 60);
+			FontMetrics fm = g.getFontMetrics(font);
+			g.setFont(font);
+			g.drawString(currentWord, WIDTH/2 - (fm.stringWidth(currentWord)/2), 500);
 		}
-			//Escrevendo as letras que o player errou na tela
-			g.setFont(new Font("arial", Font.BOLD, 30));
-			g.setColor(Color.black);
-			g.drawString("Letras erradas: ", 10, 30);
-			String lk = new String(player.lastKeys);
-			g.drawString(lk, 230, 30);
-		if(gameState == "GAME OVER" || gameState == "VITORIA" || gameState == "FIM" || gameState == "MENU") {
+		//Escrevendo as letras que o player errou na tela
+		g.setFont(new Font("arial", Font.BOLD, 30));
+		g.setColor(Color.black);
+		g.drawString("Letras erradas: ", 10, 30);
+		String lk = new String(player.lastKeys);
+		g.drawString(lk, 230, 30);
+		
+		if(gameState != "NOVA PALAVRA") {
 			menu.render(g);
 		}
 		/****/
@@ -171,15 +168,6 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
 		bs.show();
-	}
-	
-	//Método para renderizar a palavra centralizada no eixo x
-	public void renderWord(Graphics g, String text, Rectangle rect, Font font) {
-	    FontMetrics metrics = g.getFontMetrics(font);
-	    int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-	    int y = 500;
-	    g.setFont(font);
-	    g.drawString(text, x, y);	
 	}
 
 	public void run() {
@@ -205,7 +193,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			player.key = Character.toLowerCase(player.key);
 			player.isPressed = true;
 		}
-		if(gameState == "VITORIA" || gameState == "GAME OVER" || gameState == "MENU" || gameState == "FIM") {
+		
+		if(gameState != "NORMAL" || gameState != "NOVA PALAVRA") {
 			if(e.getKeyCode() == KeyEvent.VK_UP ||
 					e.getKeyCode() == KeyEvent.VK_W) {
 				menu.up = true;

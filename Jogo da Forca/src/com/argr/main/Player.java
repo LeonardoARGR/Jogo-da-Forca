@@ -1,15 +1,9 @@
 package com.argr.main;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class Player {
@@ -18,8 +12,6 @@ public class Player {
 	private int WIDTH, HEIGHT;
 	
 	private BufferedImage[] sprites;
-	
-	private boolean fail = false;
 
 	public char[] lastKeys;
 	public char key = ' ';
@@ -64,14 +56,13 @@ public class Player {
 		return false;
 	}
 	
-	 public static String removeAccent(String str) {
-	        String normalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
-	        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-	        return pattern.matcher(normalizedString).replaceAll("");
+	public static String removeAccent(String str) {
+		String normalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
+	    Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+	    return pattern.matcher(normalizedString).replaceAll("");
 	}
 	
 	public void tick() {
-		
 		
 		if(isPressed) {
 			isPressed = false;

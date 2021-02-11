@@ -19,6 +19,7 @@ public class Menu {
 	
 	public void tick() {
 		if(Game.gameState == "MENU") {	
+			Game.word.numbers.clear();
 			if(up) {
 				up = false;
 				currentOption--;
@@ -39,7 +40,7 @@ public class Menu {
 				Game.gameState = "NOVA PALAVRA";	
 				currentOption = 0;
 			}
-		}else if(Game.gameState == "VITORIA" || Game.gameState == "GAME OVER" || Game.gameState == "FIM") {
+		}else {
 			if(up) {
 				up = false;
 				currentOption--;
