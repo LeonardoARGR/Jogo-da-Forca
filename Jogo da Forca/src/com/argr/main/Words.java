@@ -32,7 +32,7 @@ public class Words {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(maxWords);
+		//System.out.println(maxWords);
 		int count = 0;
 		if(file.exists()) {
 			try {
@@ -45,8 +45,8 @@ public class Words {
 						count++;
 						if(count >= maxCount) {
 							word = line;
-							System.out.println(numbers.size());
-							System.out.println(word);
+							//System.out.println(numbers.size());
+							//System.out.println(word);
 							return word;
 						}
 						

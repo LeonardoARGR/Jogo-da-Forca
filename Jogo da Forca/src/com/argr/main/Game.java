@@ -40,6 +40,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public static Random rand;
 	
+	public static FontMetrics metrics;
+	
 	private String path;
 
 	public String[] themes = {"cor", "alimento", "nome"};
@@ -47,6 +49,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private Menu menu;
 	
 	public static int currentTheme;
+	
+	private boolean tip = false;
+	private String strTip = "aperte SHIFT";
+	private int tipCount = 0;
 	
 	
 	public Game(){
@@ -99,6 +105,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		
 		if(gameState == "NORMAL") {
 			player.tick();
+			
+			if(tip && tipCount < 1) {
+				tip = false;
+				int pos = rand.nextInt(completeWord.length());
+				strTip = "Tem a letra " + Player.removeAccent(completeWord).substring(pos, pos+1).toUpperCase();
+				tipCount++;
+			}
+			
 			if(currentWord.equals(completeWord)) {
 				if(word.numbers.size() >= word.maxWords) {
 					gameState = "FIM";
@@ -113,6 +127,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			Arrays.fill(player.lastKeys, ' ');
 			player.posCount = 0;
 			player.playerLife = 0;
+			
+			//Resetando a dica
+			strTip = "aperte SHIFT";
+			tipCount = 0;
 			
 			//Selecionando a palavra e o tema
 			path = "C:\\Users\\LAG20\\eclipse-workspace\\Jogo da Forca\\res\\" + themes[currentTheme] + ".txt";
@@ -145,13 +163,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		
 		/* Renderizando o jogo */
 		player.render(g);
-			
+		
+		Font font;	
 		//Renderizando a palavra centralizada no eixo x
 		if(gameState == "NORMAL") {
-			Font font = new Font("arial", Font.BOLD, 60);
-			FontMetrics fm = g.getFontMetrics(font);
+			font = new Font("arial", Font.BOLD, 60);
+			metrics = g.getFontMetrics(font);
 			g.setFont(font);
-			g.drawString(currentWord, WIDTH/2 - (fm.stringWidth(currentWord)/2), 500);
+			g.drawString(currentWord, WIDTH/2 - (metrics.stringWidth(currentWord)/2), 500);
 		}
 		//Escrevendo as letras que o player errou na tela
 		g.setFont(new Font("arial", Font.BOLD, 30));
@@ -159,6 +178,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		g.drawString("Letras erradas: ", 10, 30);
 		String lk = new String(player.lastKeys);
 		g.drawString(lk, 230, 30);
+		
+		g.drawString("Dica: " + strTip, 710, 30);
 		
 		if(gameState != "NOVA PALAVRA") {
 			menu.render(g);
@@ -206,11 +227,21 @@ public class Game extends Canvas implements Runnable, KeyListener{
 				menu.enter = true;
 			}
 		}
+		
+		if(gameState == "NORMAL" && e.getKeyCode() == KeyEvent.VK_SHIFT) {
+			tip = true;
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
+		tip = false;
+		
 		player.key = ' ';
 		player.isPressed = false;
+		
+		menu.up = false;
+		menu.down = false;
+		menu.enter = false;
 	}
 
 	public void keyTyped(KeyEvent e) {

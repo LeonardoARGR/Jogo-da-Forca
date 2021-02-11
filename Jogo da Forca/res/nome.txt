@@ -25,11 +25,8 @@ bárbara
 beatriz
 benjamim
 bernardo
-bete
 brenda
 breno
-brian
-bruce
 bruna
 bruno
 caio
@@ -41,11 +38,10 @@ cassandra
 catarina
 celso
 cíntia
-cirilo
 clara
 cláudia
 cláudio
-cléver
+cléber
 cristiana
 cristiano
 cristina
@@ -55,7 +51,6 @@ danilo
 davi
 débora
 denise
-diana
 diego
 diogo
 dominique
@@ -68,7 +63,6 @@ elena
 eliana
 elias
 elisabete
-elsa
 emanuel
 emanuela
 emília
@@ -81,7 +75,6 @@ fabiano
 fábio
 fabrício
 fátima
-fausto
 felipe
 fernanda
 fernando
@@ -98,7 +91,6 @@ gilberto
 gilmar
 gilson
 giovana
-gláuber
 graziela
 guilherme
 gustavo
@@ -124,7 +116,6 @@ jade
 jaime
 jaqueline
 jasmim
-jean
 jefferson
 jenifer
 jeremias
@@ -155,7 +146,6 @@ laura
 leandra
 leandro
 leila
-lenora
 leonardo
 leonora
 letícia
@@ -213,7 +203,7 @@ paloma
 pamela
 patrícia
 patrício
-paila
+paula
 paulo
 pedro
 peter
@@ -221,9 +211,9 @@ rafael
 rafaela
 raquel
 rebeca
-ragina
+regina
 reginaldo
-retata
+renata
 renato
 ricardo
 roberta

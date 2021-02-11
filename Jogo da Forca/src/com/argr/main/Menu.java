@@ -37,8 +37,8 @@ public class Menu {
 			if(enter) {
 				enter = false;
 				Game.currentTheme = currentOption;
-				Game.gameState = "NOVA PALAVRA";	
 				currentOption = 0;
+				Game.gameState = "NOVA PALAVRA";
 			}
 		}else {
 			if(up) {
