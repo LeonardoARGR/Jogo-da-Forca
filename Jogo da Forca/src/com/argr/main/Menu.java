@@ -118,7 +118,14 @@ public class Menu {
 			
 			g.setColor(Color.black);
 			g.setFont(font);
-			g.drawString(txt[txti], Game.WIDTH/2 - (fm.stringWidth(txt[txti])/2), 200);
+			g.drawString(txt[txti], Game.WIDTH/2 - (fm.stringWidth(txt[txti])/2), 150);
+			
+			font = new Font("arial", Font.BOLD, 30);
+			fm = g.getFontMetrics(font);
+			String str = "A palavra completa era " + Game.completeWord;
+			g.setFont(font);
+			g.drawString(str, Game.WIDTH/2 - (fm.stringWidth(str)/2), 250);
+			g.fillRect(Game.WIDTH/2 - (fm.stringWidth(str)/2), 259, fm.stringWidth(str), 5);
 			
 			for(int i = 0; i < options.length; i++) {
 				font = new Font("arial", Font.BOLD, 50);

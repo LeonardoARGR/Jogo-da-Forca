@@ -11,10 +11,10 @@ branco
 marrom
 magenta
 violeta
-lilas
+lilás
 ciano
 prata
 dourado
 bege
 bronze
-purpura
+púrpura

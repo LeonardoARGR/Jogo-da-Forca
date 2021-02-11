@@ -7,8 +7,10 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class Player {
 	
@@ -62,13 +64,21 @@ public class Player {
 		return false;
 	}
 	
+	 public static String removeAccent(String str) {
+	        String normalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
+	        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+	        return pattern.matcher(normalizedString).replaceAll("");
+	}
+	
 	public void tick() {
+		
 		
 		if(isPressed) {
 			isPressed = false;
+			String cwna = removeAccent(Game.completeWord);
 			int count = 0;
-			for(int i = 0; i < Game.completeWord.length(); i++) {
-				if(key == Game.completeWord.charAt(i)) {
+			for(int i = 0; i < cwna.length(); i++) {
+				if(key == cwna.charAt(i)) {
 					//Adicionando a tecla certa na palavra atual
 					char[] newCurrent = Game.currentWord.toCharArray();
 					newCurrent[i] = Game.completeWord.charAt(i);
