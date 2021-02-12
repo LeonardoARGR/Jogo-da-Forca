@@ -4,15 +4,19 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class Game extends Canvas implements Runnable, KeyListener{
@@ -25,11 +29,13 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private JFrame frame;
 	private BufferedImage image;
 	public static Spritesheet spritesheet;
+	private BufferedImage background;
 	
 	private boolean isRunning = false;
 	private Thread thread;
 	
 	private Player player;
+	private Menu menu;
 
 	public static Words word;
 	public static String currentWord;
@@ -39,21 +45,19 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public static String gameState = "MENU";
 	
 	public static Random rand;
-	
 	public static FontMetrics metrics;
 	
 	private String path;
-
 	public String[] themes = {"cor", "alimento", "nome"};
-	
-	private Menu menu;
-	
 	public static int currentTheme;
 	
 	private boolean tip = false;
 	private String strTip = "aperte SHIFT";
 	private int tipCount = 0;
 	
+	private InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("font.ttf");
+	public static Font font;
+	public static int fontScale;
 	
 	public Game(){
 		addKeyListener(this);
@@ -61,11 +65,21 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		initFrame();
 		
 		//Inicializando objetos
+		try {
+			background = ImageIO.read(getClass().getResource("/lousa_background.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, stream);
+		} catch (FontFormatException | IOException e) {
+			e.printStackTrace();
+		}
 		rand = new Random();
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		menu = new Menu();
 		spritesheet = new Spritesheet("/spritesheet.png");
-		player = new Player(250, 0, 64, 64);
+		player = new Player(250, 0, 600, 600);
 		word = new Words();
 	}
 
@@ -109,8 +123,12 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			if(tip && tipCount < 1) {
 				tip = false;
 				int pos = rand.nextInt(completeWord.length());
-				strTip = "Tem a letra " + Player.removeAccent(completeWord).substring(pos, pos+1).toUpperCase();
-				tipCount++;
+				while(!((currentWord.substring(pos, pos+1)).equals("_"))) {
+					pos = rand.nextInt(completeWord.length());
+				}
+				strTip = "Tem a letra " + Player.removeAccent(completeWord).substring(pos, pos+1);
+				//tipCount++;
+				
 			}
 			
 			if(currentWord.equals(completeWord)) {
@@ -139,7 +157,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			
 			//Criando a palavra atual com os espaços sem letras
 			emptySpaces = new char[completeWord.length()];	
-			Arrays.fill(emptySpaces, '*');
+			Arrays.fill(emptySpaces, '_');
 			currentWord = new String(emptySpaces);
 			//Iniciando o jogo
 			gameState = "NORMAL";
@@ -161,27 +179,25 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		g.setColor(Color.white);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
+		g.drawImage(background, 0, 0, null);
+		
 		/* Renderizando o jogo */
-		player.render(g);
-		
-		Font font;	
-		//Renderizando a palavra centralizada no eixo x
 		if(gameState == "NORMAL") {
-			font = new Font("arial", Font.BOLD, 60);
+			String lk = new String(player.lastKeys);
+			//font = new Font("arial", Font.BOLD, 60);
+			
+			g.setColor(Color.white);
+			g.setFont(font.deriveFont(130f));
 			metrics = g.getFontMetrics(font);
-			g.setFont(font);
-			g.drawString(currentWord, WIDTH/2 - (metrics.stringWidth(currentWord)/2), 500);
+			g.drawString(currentWord, 210, 610);
+			g.setFont(font.deriveFont(45f));
+			g.drawString("Letras erradas: " + lk, 10, 40);
+			//g.drawString(X, 230, 30);
+			g.drawString("Dica: " + strTip, 650, 40);
+			player.render(g);
 		}
-		//Escrevendo as letras que o player errou na tela
-		g.setFont(new Font("arial", Font.BOLD, 30));
-		g.setColor(Color.black);
-		g.drawString("Letras erradas: ", 10, 30);
-		String lk = new String(player.lastKeys);
-		g.drawString(lk, 230, 30);
 		
-		g.drawString("Dica: " + strTip, 710, 30);
-		
-		if(gameState != "NOVA PALAVRA") {
+		else if(gameState != "NOVA PALAVRA") {
 			menu.render(g);
 		}
 		/****/

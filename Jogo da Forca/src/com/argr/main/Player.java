@@ -30,7 +30,7 @@ public class Player {
 		sprites = new BufferedImage[7];
 		
 		for(int i = 0; i < 7; i++) {
-			sprites[i] = Game.spritesheet.getSprite(0 + (64*i), 0, 64, 64);
+			sprites[i] = Game.spritesheet.getSprite(0 + (700*i), 0, 700, 700);
 		}
 		
 		lastKeys = new char[6];
@@ -93,7 +93,7 @@ public class Player {
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(sprites[playerLife], getX(), getY(), WIDTH*8, HEIGHT*8, null);
+		g.drawImage(sprites[playerLife], -80, getY(), null);
 		g.setColor(Color.black);
 	}
 }

@@ -2,9 +2,7 @@ package com.argr.main;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 public class Menu {
 	
@@ -83,21 +81,21 @@ public class Menu {
 	
 	public void render(Graphics g) {
 		if(Game.gameState == "MENU") {
+			/*
 			g.setColor(Color.white);
 			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-			g.setColor(Color.black);
-			g.setFont(new Font("arial", Font.BOLD, 60));
-			g.drawString("Escolha o tema:", 30, 100);
+			*/
+			g.setColor(Color.white);
+			g.setFont(Game.font.deriveFont(60f));
+			g.drawString("Escolha o tema:", 150, 100);
 			
 			for(int i = 0; i < menuOptions.length; i++) {
-				g.setFont(new Font("arial", Font.BOLD, 50));
+				g.setFont(Game.font.deriveFont(50f));
 				g.drawString(menuOptions[i], 560, 100 + (i*90));
 				g.drawString(">", 520, 100 + (currentOption*90));
 			}
 		}else if(Game.gameState == "VITORIA" || Game.gameState == "GAME OVER" || Game.gameState == "FIM") {
-			Graphics2D g2 = (Graphics2D) g;
-			Font font = new Font("arial", Font.BOLD, 90);
-			FontMetrics fm = g.getFontMetrics(font);
+			Font font = Game.font.deriveFont(100f);
 			String[] txt = {"Fim de jogo", "Você acertou!", "Você acertou todas as palavras!"};
 			int txti;
 			
@@ -108,33 +106,33 @@ public class Menu {
 				txti = 1;
 				options[0] = "Continuar";
 			}else {
-				font = new Font("arial", Font.BOLD, 60);
-				fm = g.getFontMetrics(font);
+				font = Game.font.deriveFont(60f);
 			    txti = 2;
 			    options[0] = "Reiniciar";
 			}
-			
+			/*
 			g2.setColor(new Color(255, 255, 255, 240));
 			g2.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-			
-			g.setColor(Color.black);
+			*/
+			g.setColor(Color.white);
 			g.setFont(font);
-			g.drawString(txt[txti], Game.WIDTH/2 - (fm.stringWidth(txt[txti])/2), 150);
+			Game.metrics = g.getFontMetrics(font);
+			g.drawString(txt[txti], Game.WIDTH/2 - (Game.metrics.stringWidth(txt[txti])/2), 150);
 			
-			font = new Font("arial", Font.BOLD, 30);
-			fm = g.getFontMetrics(font);
+			font = Game.font.deriveFont(40f);
+			Game.metrics = g.getFontMetrics(font);
 			String str = "A palavra completa era " + Game.completeWord;
 			g.setFont(font);
-			g.drawString(str, Game.WIDTH/2 - (fm.stringWidth(str)/2), 250);
-			g.fillRect(Game.WIDTH/2 - (fm.stringWidth(str)/2), 259, fm.stringWidth(str), 5);
+			g.drawString(str, Game.WIDTH/2 - (Game.metrics.stringWidth(str)/2), 250);
+			g.fillRect(Game.WIDTH/2 - (Game.metrics.stringWidth(str)/2), 259, Game.metrics.stringWidth(str), 5);
 			
 			for(int i = 0; i < options.length; i++) {
-				font = new Font("arial", Font.BOLD, 50);
-				fm = g.getFontMetrics(font);
+				font = Game.font.deriveFont(50f);
+				Game.metrics = g.getFontMetrics(font);
 				g.setFont(font);
-				g.drawString(options[i], Game.WIDTH/2 - (fm.stringWidth(options[i])/2), 350 + (i*90));
+				g.drawString(options[i], Game.WIDTH/2 - (Game.metrics.stringWidth(options[i])/2), 350 + (i*90));
 				if(currentOption == i) {
-					g.drawString(">", (Game.WIDTH/2 - (fm.stringWidth(options[i])/2)) - 50, 350 + (i*90));
+					g.drawString(">", (Game.WIDTH/2 - (Game.metrics.stringWidth(options[i])/2)) - 50, 350 + (i*90));
 				}
 			}
 			
