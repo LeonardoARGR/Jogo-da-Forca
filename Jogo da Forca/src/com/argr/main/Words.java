@@ -32,21 +32,18 @@ public class Words {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//System.out.println(maxWords);
 		int count = 0;
 		if(file.exists()) {
 			try {
+				@SuppressWarnings("resource")
 				BufferedReader reader = new BufferedReader(new FileReader(file));
 				String line = null;
 				try {
 					maxCount = newNumber();
-					//System.out.println(numbers);
 					while((line = reader.readLine()) != null) {
 						count++;
 						if(count >= maxCount) {
 							word = line;
-							//System.out.println(numbers.size());
-							//System.out.println(word);
 							return word;
 						}
 						

@@ -81,10 +81,6 @@ public class Menu {
 	
 	public void render(Graphics g) {
 		if(Game.gameState == "MENU") {
-			/*
-			g.setColor(Color.white);
-			g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-			*/
 			g.setColor(Color.white);
 			g.setFont(Game.font.deriveFont(60f));
 			g.drawString("Escolha o tema:", 150, 100);
@@ -110,10 +106,6 @@ public class Menu {
 			    txti = 2;
 			    options[0] = "Reiniciar";
 			}
-			/*
-			g2.setColor(new Color(255, 255, 255, 240));
-			g2.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-			*/
 			g.setColor(Color.white);
 			g.setFont(font);
 			Game.metrics = g.getFontMetrics(font);

@@ -127,7 +127,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 					pos = rand.nextInt(completeWord.length());
 				}
 				strTip = "Tem a letra " + Player.removeAccent(completeWord).substring(pos, pos+1);
-				//tipCount++;
+				tipCount++;
 				
 			}
 			
@@ -188,7 +188,6 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			
 			g.setColor(Color.white);
 			g.setFont(font.deriveFont(130f));
-			metrics = g.getFontMetrics(font);
 			g.drawString(currentWord, 210, 610);
 			g.setFont(font.deriveFont(45f));
 			g.drawString("Letras erradas: " + lk, 10, 40);

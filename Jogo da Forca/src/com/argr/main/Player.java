@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 public class Player {
 	
 	private double x, y;
-	private int WIDTH, HEIGHT;
 	
 	private BufferedImage[] sprites;
 
@@ -24,8 +23,6 @@ public class Player {
 	public Player(int x, int y, int WIDTH, int HEIGHT) {
 		this.x = x;
 		this.y = y;
-		this.WIDTH = WIDTH;
-		this.HEIGHT = HEIGHT;
 		
 		sprites = new BufferedImage[7];
 		
