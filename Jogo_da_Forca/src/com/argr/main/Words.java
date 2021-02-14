@@ -22,9 +22,10 @@ public class Words {
 	public String getWord(String path) {
 		String word = "";
 		File file = new File(path);
+		System.out.println(file.getAbsolutePath());
 		LineNumberReader lnr;
 		try {
-			lnr = new LineNumberReader(new FileReader(file));
+			lnr = new LineNumberReader(new FileReader(path));
 			lnr.skip(Long.MAX_VALUE);
 			maxWords = lnr.getLineNumber()+1;
 		} catch (FileNotFoundException e1) {
@@ -52,6 +53,9 @@ public class Words {
 				
 			}catch(FileNotFoundException e) {}
 			
+		}
+		else {
+			System.out.println("cum");
 		}
 		return null;
 	}

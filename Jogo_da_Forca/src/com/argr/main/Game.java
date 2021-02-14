@@ -47,8 +47,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public static Random rand;
 	public static FontMetrics metrics;
 	
-	private String path;
-	public String[] themes = {"cor", "alimento", "nome"};
+	public String[] themes = {"cor.txt", "alimento.txt", "nome.txt"};
 	public static int currentTheme;
 	
 	private boolean tip = false;
@@ -151,9 +150,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			tipCount = 0;
 			
 			//Selecionando a palavra e o tema
-			path = "C:\\Users\\LAG20\\eclipse-workspace\\Jogo da Forca\\res\\" + themes[currentTheme] + ".txt";
-			//System.out.println(themes[currentTheme]);
-			completeWord = word.getWord(path);
+			completeWord = word.getWord(themes[currentTheme]);
 			
 			//Criando a palavra atual com os espaços sem letras
 			emptySpaces = new char[completeWord.length()];	
